@@ -30,6 +30,9 @@ public class User implements UserDetails {
     @Column
     private String email;
     
+    @Column
+    private Integer age;
+    
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
         name = "users_roles",
@@ -47,6 +50,15 @@ public class User implements UserDetails {
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
+    }
+    
+    public User(String username, String password, String firstName, String lastName, String email, Integer age) {
+        this.username = username;
+        this.password = password;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email = email;
+        this.age = age;
     }
 
     @Override
@@ -130,5 +142,13 @@ public class User implements UserDetails {
     
     public void setRoles(Set<Role> roles) {
         this.roles = roles;
+    }
+    
+    public Integer getAge() {
+        return age;
+    }
+    
+    public void setAge(Integer age) {
+        this.age = age;
     }
 }

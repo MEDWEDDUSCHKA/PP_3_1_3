@@ -26,6 +26,7 @@ public class AdminController {
     @GetMapping
     public String listUsers(Model model) {
         model.addAttribute("users", userService.getAllUsers());
+        model.addAttribute("allRoles", roleService.getAllRoles());
         return "admin/users";
     }
     
@@ -37,8 +38,19 @@ public class AdminController {
     }
     
     @PostMapping
-    public String createUser(@ModelAttribute("user") User user, 
+    public String createUser(@RequestParam("firstName") String firstName,
+                            @RequestParam("lastName") String lastName,
+                            @RequestParam("age") Integer age,
+                            @RequestParam("email") String email,
+                            @RequestParam("password") String password,
                             @RequestParam("roleIds") List<Long> roleIds) {
+        User user = new User();
+        user.setUsername(firstName); // Using firstName as username
+        user.setFirstName(firstName);
+        user.setLastName(lastName);
+        user.setAge(age);
+        user.setEmail(email);
+        user.setPassword(password);
         user.setRoles(roleService.getRolesByIds(roleIds));
         userService.saveUser(user);
         return "redirect:/admin";
@@ -53,8 +65,26 @@ public class AdminController {
     }
     
     @PostMapping("/update")
-    public String updateUser(@ModelAttribute("user") User user, 
+    public String updateUser(@RequestParam("id") Long id,
+                            @RequestParam("username") String username,
+                            @RequestParam("firstName") String firstName,
+                            @RequestParam("lastName") String lastName,
+                            @RequestParam("age") Integer age,
+                            @RequestParam("email") String email,
+                            @RequestParam(value = "password", required = false) String password,
                             @RequestParam("roleIds") List<Long> roleIds) {
+        User user = userService.getUserById(id);
+        user.setUsername(firstName); // Using firstName as username
+        user.setFirstName(firstName);
+        user.setLastName(lastName);
+        user.setAge(age);
+        user.setEmail(email);
+        
+        // Only update password if provided
+        if (password != null && !password.trim().isEmpty()) {
+            user.setPassword(password);
+        }
+        
         user.setRoles(roleService.getRolesByIds(roleIds));
         userService.updateUser(user);
         return "redirect:/admin";

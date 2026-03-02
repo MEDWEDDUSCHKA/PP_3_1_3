@@ -45,10 +45,11 @@ public class UserServiceImpl implements UserService {
     public void updateUser(User user) {
         User existingUser = userRepository.findById(user.getId()).orElse(null);
         if (existingUser != null) {
-            // Если пароль не изменился, оставляем старый
-            if (user.getPassword().equals(existingUser.getPassword())) {
+            // Если пароль пустой или null, оставляем старый пароль
+            if (user.getPassword() == null || user.getPassword().trim().isEmpty()) {
                 user.setPassword(existingUser.getPassword());
-            } else {
+            } else if (!user.getPassword().equals(existingUser.getPassword())) {
+                // Если пароль изменился, кодируем новый
                 user.setPassword(passwordEncoder.encode(user.getPassword()));
             }
         }
