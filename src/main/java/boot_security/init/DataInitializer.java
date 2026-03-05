@@ -1,6 +1,5 @@
 package boot_security.init;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 import boot_security.models.Role;
@@ -17,7 +16,6 @@ public class DataInitializer implements CommandLineRunner {
     private final UserService userService;
     private final RoleRepository roleRepository;
     
-    @Autowired
     public DataInitializer(UserService userService, RoleRepository roleRepository) {
         this.userService = userService;
         this.roleRepository = roleRepository;
@@ -37,7 +35,6 @@ public class DataInitializer implements CommandLineRunner {
             roleRepository.save(roleUser);
         }
 
-        // Create or update admin user
         User admin = userService.findByUsername("admin");
         if (admin == null) {
             admin = new User("admin", "admin", "admin", "admin", "admin@mail.ru", 35);
@@ -47,12 +44,10 @@ public class DataInitializer implements CommandLineRunner {
             admin.setRoles(adminRoles);
             userService.saveUser(admin);
         } else if (admin.getAge() == null) {
-            // Update existing admin with age
             admin.setAge(35);
             userService.updateUser(admin);
         }
 
-        // Create or update user
         User user = userService.findByUsername("user");
         if (user == null) {
             user = new User("user", "user", "user", "user", "user@mail.ru", 30);
@@ -61,7 +56,6 @@ public class DataInitializer implements CommandLineRunner {
             user.setRoles(userRoles);
             userService.saveUser(user);
         } else if (user.getAge() == null) {
-            // Update existing user with age
             user.setAge(30);
             userService.updateUser(user);
         }
