@@ -37,21 +37,33 @@ public class DataInitializer implements CommandLineRunner {
             roleRepository.save(roleUser);
         }
 
-        if (userService.findByUsername("admin") == null) {
-            User admin = new User("admin", "admin", "admin", "admin", "admin@mail.ru", 35);
+        // Create or update admin user
+        User admin = userService.findByUsername("admin");
+        if (admin == null) {
+            admin = new User("admin", "admin", "admin", "admin", "admin@mail.ru", 35);
             Set<Role> adminRoles = new HashSet<>();
             adminRoles.add(roleAdmin);
             adminRoles.add(roleUser);
             admin.setRoles(adminRoles);
             userService.saveUser(admin);
+        } else if (admin.getAge() == null) {
+            // Update existing admin with age
+            admin.setAge(35);
+            userService.updateUser(admin);
         }
 
-        if (userService.findByUsername("user") == null) {
-            User user = new User("user", "user", "user", "user", "user@mail.ru", 30);
+        // Create or update user
+        User user = userService.findByUsername("user");
+        if (user == null) {
+            user = new User("user", "user", "user", "user", "user@mail.ru", 30);
             Set<Role> userRoles = new HashSet<>();
             userRoles.add(roleUser);
             user.setRoles(userRoles);
             userService.saveUser(user);
+        } else if (user.getAge() == null) {
+            // Update existing user with age
+            user.setAge(30);
+            userService.updateUser(user);
         }
     }
 }
