@@ -12,7 +12,7 @@ import boot_security.models.User;
 public class UserController {
     
     @GetMapping
-    public String userPage(Authentication authentication, Model model) {
+    public String showUserPage(Authentication authentication, Model model) {
         User user = (User) authentication.getPrincipal();
         model.addAttribute("user", user);
         return "user";
